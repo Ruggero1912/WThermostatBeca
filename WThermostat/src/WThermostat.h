@@ -16,6 +16,9 @@
 #define MODEL_ME102H 6
 #define MODEL_CALYPSOW 7
 #define MODEL_DLX_LH01 8
+
+#define MODEL_PACIOSOFT_THERMOSTAT 9
+
 #define PIN_STATE_HEATING_RELAY 5
 #define NOT_SUPPORTED 0x00
 
@@ -139,6 +142,7 @@ public :
 		page->printf(HTTP_COMBOBOX_ITEM, "5", (this->thermostatModel->getByte() == 5 ? HTTP_SELECTED : ""), "Minco Heat MK70GB-H");
     page->printf(HTTP_COMBOBOX_ITEM, "7", (this->thermostatModel->getByte() == 7 ? HTTP_SELECTED : ""), "VH Control Calypso-W");
     page->printf(HTTP_COMBOBOX_ITEM, "8", (this->thermostatModel->getByte() == 8 ? HTTP_SELECTED : ""), "DLX-LH01");
+    page->printf(HTTP_COMBOBOX_ITEM, "9", (this->thermostatModel->getByte() == 9 ? HTTP_SELECTED : ""), "PACIOSOFT thermostat");
     page->print(FPSTR(HTTP_COMBOBOX_END));
     //Checkbox
     page->printf(HTTP_CHECKBOX_OPTION, "sb", "sb", (this->switchBackToAuto->getBoolean() ? HTTP_CHECKED : ""), "", "Auto mode from manual mode at next schedule period change <br> (not at model ET-81W and ME81AH)");
@@ -577,7 +581,7 @@ protected :
         //55 AA 00 06 00 05 01 01 00 01 01
         byte dt = (this->deviceOn->getBoolean() ? 0x01 : 0x00);
         unsigned char deviceOnCommand[] = { 0x55, 0xAA, 0x00, 0x06, 0x00, 0x05,
-                                            byteDeviceOn, 0x01, 0x00, 0x01, dt};
+                                           byteDeviceOn, 0x01, 0x00, 0x01, dt};
         commandCharsToSerial(11, deviceOnCommand);
     }
   }
@@ -600,7 +604,7 @@ protected :
       byte sm = schedulesMode->getEnumIndex();
       if (sm != 0xFF) {
         unsigned char deviceOnCommand[] = { 0x55, 0xAA, 0x00, 0x06, 0x00, 0x05,
-                                            byteSchedulesMode, 0x04, 0x00, 0x01, sm};
+                                           byteSchedulesMode, 0x04, 0x00, 0x01, sm};
         commandCharsToSerial(11, deviceOnCommand);
       }
     }

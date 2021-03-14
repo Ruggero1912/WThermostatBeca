@@ -12,6 +12,8 @@
 #include "WThermostat_CalypsoW.h"
 #include "WThermostat_DLX_LH01.h"
 
+#include "WThermostat_paciosoft.h"
+
 #define APPLICATION "Thermostat"
 #define VERSION "1.20m"
 #define FLAG_SETTINGS 0x20
@@ -24,6 +26,7 @@ WClock* wClock;
 
 void setup() {
 	Serial.begin(9600);
+	
 	//Wifi and Mqtt connection
 	network = new WNetwork(DEBUG, APPLICATION, VERSION, NO_LED, FLAG_SETTINGS);
 	network->setOnConfigurationFinished([]() {
@@ -64,6 +67,11 @@ void setup() {
 			break;
 		case MODEL_DLX_LH01 :
 			device = new WThermostat_DLX_LH01(network, thermostatModel, wClock);
+			break;
+
+		case MODEL_PACIOSOFT_THERMOSTAT :
+			Serial.swap(15);	//15 is the TX_PORT you want to use for HardwareSerial
+			device = new WThermostat_paciosoft(network, thermostatModel, wClock);
 			break;
 		default :
 		  network->error(F("Can't start device. Wrong thermostatModel (%d)"), thermostatModel->getByte());
